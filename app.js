@@ -46,7 +46,25 @@ document.addEventListener("DOMContentLoaded", () => {
   //3 = power-pellet
   //4 = empty
 
-  const squares = [];
+  let squares = [];
+  let pacmanCurrentIndex = 490;
+  class Ghost {
+    constructor(className, startIndex, speed) {
+      this.className = className;
+      this.startIndex = startIndex;
+      this.speed = speed;
+      this.currentIndex = startIndex;
+      this.timerID = NaN;
+      this.isScared = false;
+    }
+  }
+
+  let ghosts = [
+    new Ghost("blinky", 348, 250),
+    new Ghost("pinky", 376, 400),
+    new Ghost("inky", 351, 300),
+    new Ghost("clyde", 379, 500),
+  ];
 
   function createBoard() {
     console.log("making board...");
@@ -58,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (layout[i] === 0) {
         squares[i].classList.add("pac-dot");
+        console.log(squares[i].classList);
       } else if (layout[i] === 1) {
         squares[i].classList.add("wall");
       } else if (layout[i] === 2) {
@@ -65,13 +84,23 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (layout[i] === 3) {
         squares[i].classList.add("power-pellet");
       }
-      console.log(grid.childNodes);
     }
-  }
-  createBoard();
 
-  let pacmanCurrentIndex = 490;
-  squares[pacmanCurrentIndex].classList.add("pac-man");
+    squares[pacmanCurrentIndex].classList.add("pac-man");
+
+    ghosts.forEach((ghost) => {
+      squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
+    });
+  }
+
+  function clearBoard() {
+    let board = document.querySelector(".grid");
+    let grid = Array.from(board.querySelectorAll("div"));
+    grid.forEach((div) => {
+      board.removeChild(div);
+    });
+    squares = [];
+  }
 
   function movePacman(e) {
     squares[pacmanCurrentIndex].classList.remove("pac-man");
@@ -130,9 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
     checkGameOver();
     //checkForWin()
   }
-
-  document.addEventListener("keyup", movePacman);
-
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
       score++;
@@ -154,31 +180,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ghosts.forEach((ghost) => (ghost.isScared = false));
   }
 
-  class Ghost {
-    constructor(className, startIndex, speed) {
-      this.className = className;
-      this.startIndex = startIndex;
-      this.speed = speed;
-      this.currentIndex = startIndex;
-      this.timerID = NaN;
-      this.isScared = false;
-    }
-  }
-
-  let ghosts = [
-    new Ghost("blinky", 348, 250),
-    new Ghost("pinky", 376, 400),
-    new Ghost("inky", 351, 300),
-    new Ghost("clyde", 379, 500),
-  ];
-
-  ghosts.forEach((ghost) => {
-    squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
-  });
   var letMove = 0;
   let request;
   let gameOver;
-  var moveAllGhosts = () => {
+  function moveAllGhosts() {
     let classes = document.getElementById("board").classList;
     ghosts.forEach((ghost) => moveGhost(ghost));
     request = requestAnimationFrame(moveAllGhosts);
@@ -188,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
       //   clearBoard();
       //   createBoard();
     }
-  };
+  }
 
   function moveGhost(ghost) {
     //ghost movement increments
@@ -263,14 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return false;
   }
-
-  function clearBoard() {
-    let board = document.querySelector(".grid");
-    let grid = Array.from(board.querySelectorAll("div"));
-    grid.forEach((div) => {
-      board.removeChild(div);
-    });
-  }
+  createBoard();
+  document.addEventListener("keyup", movePacman);
+  window.requestAnimationFrame(moveAllGhosts);
   //play button
   let play = document.getElementById("play");
   play.addEventListener("click", (e) => {
@@ -306,6 +306,4 @@ document.addEventListener("DOMContentLoaded", () => {
     clearBoard();
     createBoard();
   });
-
-  window.requestAnimationFrame(moveAllGhosts);
 });
