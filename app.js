@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const scoreDisplay = document.getElementById("score");
+  const messageDisplay = document.getElementById("message");
   const width = 28;
   let score = 0;
 
@@ -155,13 +156,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (gameOver) {
       // stop the ghost animation if the game is paused or the game is over
-      //set gameover back to false 
-      cancelAnimationFrame(request);
+      //set gameover back to false
       gameOver = false;
+      cancelAnimationFrame(request);
+
       console.log("Ghost animation cancelled - gameOver");
     }
     if (classes.contains("pause")) {
+      classes.remove("pause");
       cancelAnimationFrame(request);
+      messageDisplay.innerHTML = "PAUSED";
+      console.log(classes);
+    } else if (classes.contains("newGame")) {
+      classes.remove("newGame");
+      cancelAnimationFrame(request);
+      console.log("game Paused");
     }
   }
 
@@ -242,16 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return false;
   }
 
-  function newBoard() {
-    let gameEnded = gameOver;
-    if (gameEnded) {
-      console.log("creating new game ......");
-      gameOver = false;
-      clearBoard();
-      createBoard();
-    }
-  }
-
   function createBoard() {
     console.log("making board...");
     for (let i = 0; i < layout.length; i++) {
@@ -262,7 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (layout[i] === 0) {
         squares[i].classList.add("pac-dot");
-        console.log(squares[i].classList);
       } else if (layout[i] === 1) {
         squares[i].classList.add("wall");
       } else if (layout[i] === 2) {
@@ -279,7 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener("keyup", movePacman);
-    window.requestAnimationFrame(moveAllGhosts);
+    messageDisplay.innerHTML = "PRESS PLAY TO START";
   }
 
   function clearBoard() {
@@ -293,15 +291,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   createBoard();
   // if GAME OVER create new board
-  newBoard();
 
   //play button
   let play = document.getElementById("play");
   play.addEventListener("click", (e) => {
     let classes = document.getElementById("board").classList;
-    if (classes.contains("pause")) {
+    if (!classes.contains("play")) {
       console.log("currently paused");
       document.addEventListener("keyup", movePacman);
+      messageDisplay.innerHTML = "";
       window.requestAnimationFrame(moveAllGhosts);
       classes.remove("pause");
       classes.add("play");
@@ -316,18 +314,30 @@ document.addEventListener("DOMContentLoaded", () => {
     if (classes.contains("play")) {
       console.log("currently playing");
       document.removeEventListener("keyup", movePacman);
-      window.cancelAnimationFrame(moveAllGhosts);
       classes.remove("play");
       classes.add("pause");
       console.log("paused");
     }
     console.log(classes);
   });
-  // restart button // create board not working
+  // restart button
   let restart = document.getElementById("restart");
   restart.addEventListener("click", (e) => {
-    window.cancelAnimationFrame(moveAllGhosts);
+    let classes = document.getElementById("board").classList;
+    document.removeEventListener("keyup", movePacman);
+    if (classes.contains("play")) {
+      classes.remove("play");
+      classes.add("newGame");
+    }
+
+    console.log("...restart soon");
+    ghosts.forEach((ghost) => {
+      ghost.currentIndex = ghost.startIndex;
+    });
     clearBoard();
+    scoreDisplay.innerHTML = "0";
     createBoard();
+    console.log("game restarted");
+    console.log(classes);
   });
 });
