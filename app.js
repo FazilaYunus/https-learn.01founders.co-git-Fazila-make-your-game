@@ -149,13 +149,15 @@ document.addEventListener("DOMContentLoaded", () => {
   var letMove = 0;
   let request;
   let gameOver;
+
   function moveAllGhosts() {
     let classes = document.getElementById("board").classList;
     ghosts.forEach((ghost) => moveGhost(ghost));
+    //creates a request for new frame each time one is made
     request = requestAnimationFrame(moveAllGhosts);
 
     if (gameOver) {
-      // stop the ghost animation if the game is paused or the game is over
+      // stop the ghost animation if the game is over
       //set gameover back to false
       gameOver = false;
       cancelAnimationFrame(request);
@@ -276,7 +278,6 @@ document.addEventListener("DOMContentLoaded", () => {
       squares[ghost.startIndex].classList.add(ghost.className, "ghost");
     });
 
-    document.addEventListener("keyup", movePacman);
     messageDisplay.innerHTML = "PRESS PLAY TO START";
   }
 
@@ -290,7 +291,6 @@ document.addEventListener("DOMContentLoaded", () => {
     squares = [];
   }
   createBoard();
-  // if GAME OVER create new board
 
   //play button
   let play = document.getElementById("play");
@@ -299,14 +299,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!classes.contains("play")) {
       console.log("currently paused");
       document.addEventListener("keyup", movePacman);
+      // get rid of previuos prompt message
       messageDisplay.innerHTML = "";
+      // start or restart animation and pacman
+      document.addEventListener("keyup", movePacman);
       window.requestAnimationFrame(moveAllGhosts);
-      classes.remove("pause");
       classes.add("play");
       console.log("playing");
     }
     console.log(classes);
   });
+
   //pause button
   let pause = document.getElementById("pause");
   pause.addEventListener("click", (e) => {
@@ -314,29 +317,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if (classes.contains("play")) {
       console.log("currently playing");
       document.removeEventListener("keyup", movePacman);
+      // if currently playing add pause class so request is cancelled when next attempt at animation frame occurs
       classes.remove("play");
       classes.add("pause");
+      //not actually paused yet just for referece
       console.log("paused");
     }
     console.log(classes);
   });
+
   // restart button
   let restart = document.getElementById("restart");
   restart.addEventListener("click", (e) => {
     let classes = document.getElementById("board").classList;
+    // stop pacman movement
     document.removeEventListener("keyup", movePacman);
+    // if currently playing add in newGame class so request is cancelled when next attempt at animation frame occurs
+    // only necessary if game is not already paused
     if (classes.contains("play")) {
       classes.remove("play");
       classes.add("newGame");
     }
-
-    console.log("...restart soon");
+    // set ghosts current index pack to start index
     ghosts.forEach((ghost) => {
       ghost.currentIndex = ghost.startIndex;
     });
     clearBoard();
-    scoreDisplay.innerHTML = "0";
     createBoard();
+    // reset score
+    scoreDisplay.innerHTML = "0";
     console.log("game restarted");
     console.log(classes);
   });
