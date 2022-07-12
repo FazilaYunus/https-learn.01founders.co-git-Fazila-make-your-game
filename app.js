@@ -66,42 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
     new Ghost("clyde", 379, 500),
   ];
 
-  function createBoard() {
-    console.log("making board...");
-    for (let i = 0; i < layout.length; i++) {
-      const square = document.createElement("div");
-      grid.appendChild(square);
-
-      squares.push(square);
-
-      if (layout[i] === 0) {
-        squares[i].classList.add("pac-dot");
-        console.log(squares[i].classList);
-      } else if (layout[i] === 1) {
-        squares[i].classList.add("wall");
-      } else if (layout[i] === 2) {
-        squares[i].classList.add("ghost-lair");
-      } else if (layout[i] === 3) {
-        squares[i].classList.add("power-pellet");
-      }
-    }
-
-    squares[pacmanCurrentIndex].classList.add("pac-man");
-
-    ghosts.forEach((ghost) => {
-      squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
-    });
-  }
-
-  function clearBoard() {
-    let board = document.querySelector(".grid");
-    let grid = Array.from(board.querySelectorAll("div"));
-    grid.forEach((div) => {
-      board.removeChild(div);
-    });
-    squares = [];
-  }
-
   function movePacman(e) {
     squares[pacmanCurrentIndex].classList.remove("pac-man");
 
@@ -159,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkGameOver();
     //checkForWin()
   }
+
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
       score++;
@@ -187,11 +152,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let classes = document.getElementById("board").classList;
     ghosts.forEach((ghost) => moveGhost(ghost));
     request = requestAnimationFrame(moveAllGhosts);
-    if (gameOver || classes.contains("pause")) {
+
+    if (gameOver) {
       // stop the ghost animation if the game is paused or the game is over
+      //set gameover back to false 
       cancelAnimationFrame(request);
-      //   clearBoard();
-      //   createBoard();
+      gameOver = false;
+      console.log("Ghost animation cancelled - gameOver");
+    }
+    if (classes.contains("pause")) {
+      cancelAnimationFrame(request);
     }
   }
 
@@ -247,8 +217,9 @@ document.addEventListener("DOMContentLoaded", () => {
       squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
     }
     // returns true or false
-    gameOver = checkGameOver();
-    console.log(gameOver);
+    if (!gameOver) {
+      gameOver = checkGameOver();
+    }
 
     // }, ghost.speed);
   }
@@ -258,9 +229,11 @@ document.addEventListener("DOMContentLoaded", () => {
       squares[pacmanCurrentIndex].classList.contains("ghost") &&
       !squares[pacmanCurrentIndex].classList.contains("scared-ghost")
     ) {
-      ghosts.forEach((ghost) => clearInterval(ghost.timerID));
       document.removeEventListener("keyup", movePacman);
-      scoreDisplay.innerHTML = "GAME OVER you scored " + score;
+      console.log("GAME OVER");
+      scoreDisplay.innerHTML =
+        "GAME OVER you scored \n Press the restart button to begin a new game!" +
+        score;
 
       return true;
 
@@ -268,9 +241,60 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return false;
   }
+
+  function newBoard() {
+    let gameEnded = gameOver;
+    if (gameEnded) {
+      console.log("creating new game ......");
+      gameOver = false;
+      clearBoard();
+      createBoard();
+    }
+  }
+
+  function createBoard() {
+    console.log("making board...");
+    for (let i = 0; i < layout.length; i++) {
+      const square = document.createElement("div");
+      grid.appendChild(square);
+
+      squares.push(square);
+
+      if (layout[i] === 0) {
+        squares[i].classList.add("pac-dot");
+        console.log(squares[i].classList);
+      } else if (layout[i] === 1) {
+        squares[i].classList.add("wall");
+      } else if (layout[i] === 2) {
+        squares[i].classList.add("ghost-lair");
+      } else if (layout[i] === 3) {
+        squares[i].classList.add("power-pellet");
+      }
+    }
+
+    squares[490].classList.add("pac-man");
+
+    ghosts.forEach((ghost) => {
+      squares[ghost.startIndex].classList.add(ghost.className, "ghost");
+    });
+
+    document.addEventListener("keyup", movePacman);
+    window.requestAnimationFrame(moveAllGhosts);
+  }
+
+  function clearBoard() {
+    let board = document.querySelector(".grid");
+    let grid = Array.from(board.querySelectorAll("div"));
+    grid.forEach((div) => {
+      board.removeChild(div);
+    });
+    console.log("board cleared");
+    squares = [];
+  }
   createBoard();
-  document.addEventListener("keyup", movePacman);
-  window.requestAnimationFrame(moveAllGhosts);
+  // if GAME OVER create new board
+  newBoard();
+
   //play button
   let play = document.getElementById("play");
   play.addEventListener("click", (e) => {
