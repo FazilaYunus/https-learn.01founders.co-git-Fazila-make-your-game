@@ -46,6 +46,17 @@ document.addEventListener("DOMContentLoaded", () => {
   //3 = power-pellet
   //4 = empty
 
+  const numOfDotsPellet = (function countDotsPellet() {
+    let num = 0
+    for (var i = 0; i < layout.length; i++) {
+      if (layout[i] === 0 || layout[i] === 3) {
+        num = num + 1;
+      }
+    }
+    return num
+  })();
+
+  let numDotsEaten = 0;
   let squares = [];
   let pacmanCurrentIndex = 490;
   class Ghost {
@@ -157,11 +168,12 @@ document.addEventListener("DOMContentLoaded", () => {
     pacDotEaten();
     powerPelletEaten();
     checkGameOver();
-    //checkForWin()
+    checkForWin();
   }
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
       score++;
+      numDotsEaten++;
       scoreDisplay.innerHTML = score;
       squares[pacmanCurrentIndex].classList.remove("pac-dot");
     }
@@ -170,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function powerPelletEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
       score += 10;
+      numDotsEaten++;
       ghosts.forEach((ghost) => (ghost.isScared = true));
       setTimeout(unScareGhosts, 10000);
       squares[pacmanCurrentIndex].classList.remove("power-pellet");
@@ -261,13 +274,28 @@ document.addEventListener("DOMContentLoaded", () => {
       ghosts.forEach((ghost) => clearInterval(ghost.timerID));
       document.removeEventListener("keyup", movePacman);
       scoreDisplay.innerHTML = "GAME OVER you scored " + score;
-
+      clearBoard();
+      createBoard();
+      numDotsEaten = 0;
+      pacmanCurrentIndex = 490;
       return true;
-
-      //setTimeout(function () { alert("Game Over") }, 500)
     }
     return false;
   }
+
+  function checkForWin() {
+    if (numDotsEaten === numOfDotsPellet) {
+      scoreDisplay.innerHTML = "WINNER";
+      clearBoard();
+      createBoard();
+      numDotsEaten = 0;
+      pacmanCurrentIndex = 490;
+      score = 0;
+      return true;
+    }
+    return false;
+  }
+
   createBoard();
   document.addEventListener("keyup", movePacman);
   window.requestAnimationFrame(moveAllGhosts);
