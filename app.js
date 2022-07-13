@@ -152,10 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function moveAllGhosts() {
     let classes = document.getElementById("board").classList;
-    ghosts.forEach((ghost) => moveGhost(ghost));
-    //creates a request for new frame each time one is made
     request = requestAnimationFrame(moveAllGhosts);
-
     if (gameOver) {
       // stop the ghost animation if the game is over
       //set gameover back to false
@@ -174,6 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
       cancelAnimationFrame(request);
       console.log("game Paused");
     }
+
+    ghosts.forEach((ghost) => moveGhost(ghost));
+    //creates a request for new frame each time one is made
   }
 
   function moveGhost(ghost) {
@@ -184,11 +184,20 @@ document.addEventListener("DOMContentLoaded", () => {
     letMove++;
 
     // ghost.timerID = setInterval(() => {
+    if (ghost.className === "inky") {
+      console.log(
+        "Ghost info before--",
+        ghost,
+        squares[ghost.currentIndex + direction].classList.contains("wall"),
+        squares[ghost.currentIndex + direction].classList.contains("ghost"),
+        letMove
+      );
+    }
 
     if (
       !squares[ghost.currentIndex + direction].classList.contains("wall") &&
       !squares[ghost.currentIndex + direction].classList.contains("ghost") &&
-      letMove % 30 === 0
+      letMove % 15 === 0
     ) {
       //if the ghost is not about to move into a wall or another ghost
       //remove ghost from current square
@@ -242,8 +251,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       document.removeEventListener("keyup", movePacman);
       console.log("GAME OVER");
-      scoreDisplay.innerHTML =
-        "GAME OVER you scored \n Press the restart button to begin a new game!" +
+      scoreDisplay.innerHTML = 0;
+      messageDisplay.innerHTML =
+        "GAME OVER you scored. \n Press the restart button to begin a new game!" +
         score;
 
       return true;
@@ -277,6 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ghosts.forEach((ghost) => {
       squares[ghost.startIndex].classList.add(ghost.className, "ghost");
     });
+    console.log("Orignal ghost info---", ghosts);
 
     messageDisplay.innerHTML = "PRESS PLAY TO START";
   }
