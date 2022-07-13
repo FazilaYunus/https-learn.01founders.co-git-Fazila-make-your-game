@@ -184,15 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
     letMove++;
 
     // ghost.timerID = setInterval(() => {
-    if (ghost.className === "inky") {
-      console.log(
-        "Ghost info before--",
-        ghost,
-        squares[ghost.currentIndex + direction].classList.contains("wall"),
-        squares[ghost.currentIndex + direction].classList.contains("ghost"),
-        letMove
-      );
-    }
 
     if (
       !squares[ghost.currentIndex + direction].classList.contains("wall") &&
@@ -349,6 +340,8 @@ document.addEventListener("DOMContentLoaded", () => {
       classes.remove("play");
       classes.add("newGame");
     }
+    // set pacman back to start index
+    pacmanCurrentIndex = 490;
     // set ghosts current index pack to start index
     ghosts.forEach((ghost) => {
       ghost.currentIndex = ghost.startIndex;
