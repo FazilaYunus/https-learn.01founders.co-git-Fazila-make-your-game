@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const scoreDisplay = document.getElementById("score");
+  const messageDisplay = document.getElementById("message");
   const width = 28;
   let score = 0;
   let direction = 'right';
@@ -66,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.className = className;
       this.startIndex = startIndex;
       this.speed = speed;
+      this.img = img;
       this.currentIndex = startIndex;
       this.timerID = NaN;
       this.isScared = false;
@@ -98,7 +100,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    squares[pacmanCurrentIndex].classList.add("pac-man");
+    squares[490].classList.add("pac-man");
+
+    ghosts.forEach((ghost) => {
+      squares[ghost.startIndex].classList.add(ghost.className, "ghost");
+      //var ghostImg = document.createElement('img');
+      //ghostImg.setAttribute('src', ghost.img);
+      //squares[ghost.startIndex].appendChild(ghostImg);
+    });
+    console.log("Orignal ghost info---", ghosts);
+
+    messageDisplay.innerHTML = "PRESS PLAY TO START";
   }
 
   function clearBoard() {
@@ -277,16 +289,31 @@ document.addEventListener("DOMContentLoaded", () => {
   var letMove = 0;
   let request;
   let gameOver;
+
   function moveAllGhosts() {
     let classes = document.getElementById("board").classList;
-    ghosts.forEach((ghost) => moveGhost(ghost));
     request = requestAnimationFrame(moveAllGhosts);
-    if (gameOver || classes.contains("pause")) {
-      // stop the ghost animation if the game is paused or the game is over
+    if (gameOver) {
+      // stop the ghost animation if the game is over
+      //set gameover back to false
+      gameOver = false;
       cancelAnimationFrame(request);
-      //   clearBoard();
-      //   createBoard();
+
+      console.log("Ghost animation cancelled - gameOver");
     }
+    if (classes.contains("pause")) {
+      classes.remove("pause");
+      cancelAnimationFrame(request);
+      messageDisplay.innerHTML = "PAUSED";
+      console.log(classes);
+    } else if (classes.contains("newGame")) {
+      classes.remove("newGame");
+      cancelAnimationFrame(request);
+      console.log("game Paused");
+    }
+
+    ghosts.forEach((ghost) => moveGhost(ghost));
+    //creates a request for new frame each time one is made
   }
 
   function moveGhost(ghost) {
@@ -297,11 +324,10 @@ document.addEventListener("DOMContentLoaded", () => {
     letMove++;
 
     // ghost.timerID = setInterval(() => {
-
     if (
       !squares[ghost.currentIndex + direction].classList.contains("wall") &&
       !squares[ghost.currentIndex + direction].classList.contains("ghost") &&
-      letMove % 30 === 0
+      letMove % 15 === 0
     ) {
       //if the ghost is not about to move into a wall or another ghost
       //remove ghost from current square
@@ -341,11 +367,12 @@ document.addEventListener("DOMContentLoaded", () => {
       squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
     }
     // returns true or false
-    gameOver = checkGameOver();
+    if (!gameOver) {
+      gameOver = checkGameOver();
+    }
 
     // }, ghost.speed);
   }
-
   function checkGameOver() {
     if (
       squares[pacmanCurrentIndex].classList.contains("ghost") &&
