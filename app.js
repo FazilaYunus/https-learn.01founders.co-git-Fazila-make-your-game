@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const scoreDisplay = document.getElementById("score");
   const width = 28;
   let score = 0;
+  let direction = 'right';
+  let directionChange = false;
 
   const layout = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -87,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (layout[i] === 0) {
         squares[i].classList.add("pac-dot");
-        console.log(squares[i].classList);
       } else if (layout[i] === 1) {
         squares[i].classList.add("wall");
       } else if (layout[i] === 2) {
@@ -113,9 +114,150 @@ document.addEventListener("DOMContentLoaded", () => {
     squares = [];
   }
 
-  function movePacman(e) {
-    squares[pacmanCurrentIndex].classList.remove("pac-man");
+  document.onkeyup = function (e) {
+    console.log(directionChange);
+    directionChange = true;
+    console.log(directionChange);
+  }
 
+  document.onkeydown = function (e) {
+    directionChange = false;
+    switch (e.keyCode) {
+      case 37:
+        direction = 'left';
+        break;
+      case 39:
+        direction = 'right';
+        break;
+      case 38:
+        direction = 'up';
+        break;
+      case 40:
+        direction = 'down';
+        break;
+      default:
+        alert('Invalid key pressed');
+        break;
+    }
+  }
+
+  function movePacman() {
+    console.log(direction);
+    if (direction === 'left') {
+      console.log('moving left');
+      moveLeft();
+    } else if (direction === 'up') {
+      console.log('moving up');
+      moveUp();
+    } else if (direction === 'right') {
+      moveRight();
+    } else if (direction === 'down') {
+      moveDown();
+    }
+  }
+
+  function moveLeft() {
+    if (direction === 'left') {
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
+      if (directionChange === true) {
+        if (
+          pacmanCurrentIndex % width !== 0 &&
+          !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
+        )
+          pacmanCurrentIndex -= 1;
+
+        if (pacmanCurrentIndex - 1 === 363) {
+          squares[pacmanCurrentIndex].classList.add("pac-man");
+          pacmanCurrentIndex = 391;
+          squares[364].classList.remove("pac-man");
+        }
+
+        squares[pacmanCurrentIndex].classList.add("pac-man");
+
+        pacDotEaten();
+        powerPelletEaten();
+        checkGameOver();
+        checkForWin();
+
+      }
+    }
+  }
+
+  function moveUp() {
+    if (direction === 'up') {
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
+      if (directionChange === true) {
+        if (
+          pacmanCurrentIndex - width >= 0 &&
+          !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
+        )
+          pacmanCurrentIndex -= width;
+
+        squares[pacmanCurrentIndex].classList.add("pac-man");
+
+        pacDotEaten();
+        powerPelletEaten();
+        checkGameOver();
+        checkForWin();
+      }
+    }
+  }
+
+  function moveRight() {
+    if (direction === 'right') {
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
+      if (directionChange === true) {
+        if (
+          pacmanCurrentIndex % width < width - 1 &&
+          !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
+        )
+          pacmanCurrentIndex += 1;
+
+        if (pacmanCurrentIndex + 1 === 392) {
+          squares[pacmanCurrentIndex].classList.add("pac-man");
+          pacmanCurrentIndex = 364;
+          squares[391].classList.remove("pac-man");
+        }
+
+        squares[pacmanCurrentIndex].classList.add("pac-man");
+
+        pacDotEaten();
+        powerPelletEaten();
+        checkGameOver();
+        checkForWin();
+      }
+    }
+  }
+
+  function moveDown() {
+    if (direction === 'down') {
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
+      if (directionChange === true) {
+        if (
+          pacmanCurrentIndex + width < width * width &&
+          !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
+        )
+          pacmanCurrentIndex += width;
+
+        squares[pacmanCurrentIndex].classList.add("pac-man");
+
+        pacDotEaten();
+        powerPelletEaten();
+        checkGameOver();
+        checkForWin();
+      }
+    }
+  }
+
+  var intervalUpdateState = setInterval(movePacman, 200);
+
+  /*function movePacman(e) {
+    squares[pacmanCurrentIndex].classList.remove("pac-man");
+ 
     switch (e.keyCode) {
       case 37:
         if (
@@ -124,7 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
           !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
         )
           pacmanCurrentIndex -= 1;
-
+ 
         if (pacmanCurrentIndex - 1 === 363) {
           squares[pacmanCurrentIndex].classList.add("pac-man");
           pacmanCurrentIndex = 391;
@@ -146,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
           !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
         )
           pacmanCurrentIndex += 1;
-
+ 
         if (pacmanCurrentIndex + 1 === 392) {
           squares[pacmanCurrentIndex].classList.add("pac-man");
           pacmanCurrentIndex = 364;
@@ -162,14 +304,15 @@ document.addEventListener("DOMContentLoaded", () => {
           pacmanCurrentIndex += width;
         break;
     }
-
+ 
     squares[pacmanCurrentIndex].classList.add("pac-man");
-
+ 
     pacDotEaten();
     powerPelletEaten();
     checkGameOver();
     checkForWin();
   }
+*/
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
       score++;
@@ -261,7 +404,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // returns true or false
     gameOver = checkGameOver();
-    console.log(gameOver);
 
     // }, ghost.speed);
   }
@@ -297,7 +439,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   createBoard();
-  document.addEventListener("keyup", movePacman);
+  //document.addEventListener("keyup", movePacman);
   window.requestAnimationFrame(moveAllGhosts);
   //play button
   let play = document.getElementById("play");
