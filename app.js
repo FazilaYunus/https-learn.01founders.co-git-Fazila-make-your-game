@@ -118,6 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
     squares = [];
   }
 
+  function playAudio(audio) {
+    const soundEffect = new Audio(audio);
+    soundEffect.play();
+  }
+
   document.onkeyup = function (e) {
     console.log(directionChange);
     directionChange = true;
@@ -265,6 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
+      playAudio('./sounds/munch.wav');
       score++;
       numDotsEaten++;
       scoreDisplay.innerHTML = score;
@@ -274,6 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function powerPelletEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
+      playAudio('./sounds/pill.wav');
       score += 10;
       numDotsEaten++;
       ghosts.forEach((ghost) => (ghost.isScared = true));
@@ -353,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ghost.isScared &&
       squares[ghost.currentIndex].classList.contains("pac-man")
     ) {
+      playAudio('./sounds/eat_ghost.wav');
       // if a ghost is in the same square as pacman while scares remove the ghost
       squares[ghost.currentIndex].classList.remove(
         ghost.className,
@@ -378,6 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
       squares[pacmanCurrentIndex].classList.contains("ghost") &&
       !squares[pacmanCurrentIndex].classList.contains("scared-ghost")
     ) {
+      playAudio('./sounds/death.wav');
       ghosts.forEach((ghost) => clearInterval(ghost.timerID));
       document.removeEventListener("keyup", movePacman);
       scoreDisplay.innerHTML = "GAME OVER you scored " + score;
