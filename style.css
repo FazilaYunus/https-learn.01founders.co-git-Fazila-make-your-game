@@ -21,7 +21,7 @@
     background-color: blue;
 }
 
-.blinky {
+/*.blinky {
     background-color: red;
     border: 0px;
 }
@@ -44,14 +44,96 @@
 .scared-ghost {
     background-color: aquamarine;
     border: 0px;
-}
+}*/
 
 .power-pellet {
     background-color: green;
     border-radius: 10px;
 }
 
-.pac-man {
+/*.pac-man {
     background-color: yellow;
     border-radius: 10px;
-}
+}*/
+
+.ghost {
+    position: relative;
+    border-radius: 10px 10px 2px 2px;
+    border: none;
+  }
+  
+  .ghost::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: black;
+    border-radius: 50%;
+    left: 3px;
+    top: 5px;
+    border: 2px solid white;
+  }
+  
+  .ghost::after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: black;
+    border-radius: 50%;
+    right: 3px;
+    top: 5px;
+    border: 2px solid white;
+  }
+  
+  .scared-ghost {
+    background: blue !important;
+  }
+  
+  .blinky {
+    background: red;
+  }
+  
+  .pinky {
+    background: pink;
+  }
+  
+  .inky {
+    background: cyan;
+  }
+  
+  .clyde {
+    background: orange;
+  }
+
+.pac-man {
+    background: yellow;
+    border: none;
+    border-radius: 50%;
+    clip-path: polygon(
+      0 0,
+      20px 0,
+      20px -5px,
+      8px 10px,
+      20px 25px,
+      20px 20px,
+      0 20px
+    );
+    animation: chew 0.2s linear forwards infinite;
+  }
+  
+  @keyframes chew {
+    50% {
+      clip-path: polygon(
+        0 0,
+        20px 0,
+        20px 10px,
+        8px 10px,
+        20px 10px,
+        20px 20px,
+        0 20px
+      );
+    }
+  }

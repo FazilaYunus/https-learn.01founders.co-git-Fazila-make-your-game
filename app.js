@@ -63,11 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let squares = [];
   let pacmanCurrentIndex = 490;
   class Ghost {
-    constructor(className, startIndex, speed, img) {
+    constructor(className, startIndex, speed) {
       this.className = className;
       this.startIndex = startIndex;
       this.speed = speed;
-      this.img = img;
       this.currentIndex = startIndex;
       this.timerID = NaN;
       this.isScared = false;
@@ -75,10 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   let ghosts = [
-    new Ghost("blinky", 348, 250, 'images/ghost_red.png'),
-    new Ghost("pinky", 376, 400, 'images/ghost_pink.png'),
-    new Ghost("inky", 351, 300, 'images/ghost_blue.png'),
-    new Ghost("clyde", 379, 500, 'images/ghost_green.png'),
+    new Ghost("blinky", 348, 250),
+    new Ghost("pinky", 376, 400),
+    new Ghost("inky", 351, 300),
+    new Ghost("clyde", 379, 500),
   ];
 
   function createBoard() {
@@ -104,9 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ghosts.forEach((ghost) => {
       squares[ghost.startIndex].classList.add(ghost.className, "ghost");
-      //var ghostImg = document.createElement('img');
-      //ghostImg.setAttribute('src', ghost.img);
-      //squares[ghost.startIndex].appendChild(ghostImg);
     });
     console.log("Orignal ghost info---", ghosts);
 
@@ -182,6 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         squares[pacmanCurrentIndex].classList.add("pac-man");
+        document.querySelector(".pac-man").style.transform = "rotate(180deg)";
 
         pacDotEaten();
         powerPelletEaten();
@@ -204,6 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
           pacmanCurrentIndex -= width;
 
         squares[pacmanCurrentIndex].classList.add("pac-man");
+        document.querySelector(".pac-man").style.transform = "rotate(270deg)";
 
         pacDotEaten();
         powerPelletEaten();
@@ -231,6 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         squares[pacmanCurrentIndex].classList.add("pac-man");
+        document.querySelector(".pac-man").style.transform = "rotate(360deg)";
 
         pacDotEaten();
         powerPelletEaten();
@@ -252,6 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
           pacmanCurrentIndex += width;
 
         squares[pacmanCurrentIndex].classList.add("pac-man");
+        document.querySelector(".pac-man").style.transform = "rotate(90deg)";
 
         pacDotEaten();
         powerPelletEaten();
