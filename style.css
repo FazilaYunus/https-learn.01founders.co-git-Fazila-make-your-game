@@ -1,57 +1,86 @@
 .grid {
-    display: flex;
-    flex-wrap: wrap;
-    width: 560px;
-    height: 560px;
-    border: solid black;
+  display: flex;
+  flex-wrap: wrap;
+  width: 560px;
+  height: 560px;
+  border: solid black;
 }
 
 .grid div {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 }
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
+  border-radius: 10px;
+  z-index: 20;
+  background-color: yellow;
+  width: 500px;
+  max-width: 80%;
+}
+.modal-body {
+  padding: 10px 15px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid black;
+}
+#overlay {
+    position: fixed;
+    /* opacity: 0; */
+    top: 0;
+    left 0;
+    right: 0;
+    bottom; 0;
+    
 
+}
 .pac-dot {
-    background-color: green;
-    border: 5px solid white;
-    box-sizing: border-box;
+  background-color: green;
+  border: 5px solid white;
+  box-sizing: border-box;
 }
 
 .wall {
-    background-color: blue;
+  background-color: blue;
 }
 
 .blinky {
-    background-color: red;
-    border: 0px;
+  background-color: red;
+  border: 0px;
 }
 
 .pinky {
-    background-color: pink;
-    border: 0px;
+  background-color: pink;
+  border: 0px;
 }
 
 .inky {
-    background-color: cyan;
-    border: 0px;
+  background-color: cyan;
+  border: 0px;
 }
 
 .clyde {
-    background-color: orange;
-    border: 0px;
+  background-color: orange;
+  border: 0px;
 }
 
 .scared-ghost {
-    background-color: aquamarine;
-    border: 0px;
+  background-color: aquamarine;
+  border: 0px;
 }
 
 .power-pellet {
-    background-color: green;
-    border-radius: 10px;
+  background-color: green;
+  border-radius: 10px;
 }
 
 .pac-man {
-    background-color: yellow;
-    border-radius: 10px;
+  background-color: yellow;
+  border-radius: 10px;
 }

@@ -10,13 +10,25 @@
 </head>
 
 <body>
+<div id="safeTimer">
+    <h2>Timer</h2>
+    <p id="safeTimerDisplay">00:00</p>
+</div>
     <div><h3 id= "message"></h3></div>
-    <div id = 'board' class="grid"></div>
-    <h3>Score: <span id="score">0</span></h3>
+    git <div class="modal" id="modal-play-message">
+            <div class="modal-body">
+                <h1>PRESS SPACE TO START GAME</h1>
+            </div>
+         </div>
+        <div id="overlay"></div>
+    <div id = 'board' class="grid">
+        
+    </div>
+    <div>
+        <h3>Score: <span id="score">0</span> Lives: <span id="lives">3</span></h3>
+    </div>
     
     <div>
-        <span ><button id = 'pause' class="pause">Pause</button></span>
-        <span ><button id = 'play' class="play">Play</button></span>
         <span ><button id = 'restart' class="restart">Restart</button> </span>
     </div>
     

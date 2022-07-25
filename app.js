@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const scoreDisplay = document.getElementById("score");
   const messageDisplay = document.getElementById("message");
+  const livesDisplay = document.getElementById("lives");
   const width = 28;
   let score = 0;
 
@@ -164,7 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (classes.contains("pause")) {
       classes.remove("pause");
       cancelAnimationFrame(request);
-      messageDisplay.innerHTML = "PAUSED";
       console.log(classes);
     } else if (classes.contains("newGame")) {
       classes.remove("newGame");
@@ -230,28 +230,71 @@ document.addEventListener("DOMContentLoaded", () => {
     // returns true or false
     if (!gameOver) {
       gameOver = checkGameOver();
+    } else {
+      console.log(lives);
     }
 
     // }, ghost.speed);
   }
-
+  let lives = 3;
   function checkGameOver() {
     if (
       squares[pacmanCurrentIndex].classList.contains("ghost") &&
       !squares[pacmanCurrentIndex].classList.contains("scared-ghost")
     ) {
-      document.removeEventListener("keyup", movePacman);
-      console.log("GAME OVER");
-      scoreDisplay.innerHTML = 0;
-      messageDisplay.innerHTML =
-        "GAME OVER you scored. \n Press the restart button to begin a new game!" +
-        score;
+      lives--;
+      livesDisplay.innerHTML = lives;
+      if (lives > 0) {
+        squares[pacmanCurrentIndex].classList.remove("pac-man");
+        pacmanCurrentIndex = 490;
+        squares[490].classList.add("pac-man");
+        return false;
+      } else {
+        //clear timer
+        clearInterval(time);
+        document.getElementById("safeTimerDisplay").innerHTML = "00:00";
+        sec = 0;
+        min = 0;
+        document.removeEventListener("keyup", movePacman);
+        console.log("GAME OVER");
+        scoreDisplay.innerHTML = 0;
+        messageDisplay.innerHTML =
+          "GAME OVER- you scored " +
+          score +
+          ". Press the restart button below to begin a new game!";
 
-      return true;
-
-      //setTimeout(function () { alert("Game Over") }, 500)
+        return true;
+      }
     }
     return false;
+  }
+  var sec = 0;
+  var min = 0;
+  var time;
+  function timer() {
+    time = setInterval(function () {
+      if (sec === 60) {
+        sec = 0;
+        min++;
+      }
+      if (sec < 10 && min < 10) {
+        document.getElementById("safeTimerDisplay").innerHTML =
+          "0" + min + ":0" + sec;
+      } else if (sec >= 10 && min < 10) {
+        document.getElementById("safeTimerDisplay").innerHTML =
+          "0" + min + ":" + sec;
+      } else if (min >= 10 && sec < 10) {
+        document.getElementById("safeTimerDisplay").innerHTML =
+          min + ":0" + sec;
+      } else {
+        min + ":" + sec;
+      }
+
+      sec++;
+      if (min === 60) {
+        clearInterval(time);
+      }
+    }, 1000);
   }
 
   function createBoard() {
@@ -280,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     console.log("Orignal ghost info---", ghosts);
 
-    messageDisplay.innerHTML = "PRESS PLAY TO START";
+    messageDisplay.innerHTML = "PRESS SPACE TO START";
   }
 
   function clearBoard() {
@@ -293,45 +336,52 @@ document.addEventListener("DOMContentLoaded", () => {
     squares = [];
   }
   createBoard();
-
-  //play button
-  let play = document.getElementById("play");
-  play.addEventListener("click", (e) => {
-    let classes = document.getElementById("board").classList;
-    if (!classes.contains("play")) {
-      console.log("currently paused");
-      document.addEventListener("keyup", movePacman);
-      // get rid of previuos prompt message
-      messageDisplay.innerHTML = "";
-      // start or restart animation and pacman
-      document.addEventListener("keyup", movePacman);
-      window.requestAnimationFrame(moveAllGhosts);
-      classes.add("play");
-      console.log("playing");
-    }
-    console.log(classes);
+  document.addEventListener("keyup", (e) => {
+    console.log(e.code);
   });
 
-  //pause button
-  let pause = document.getElementById("pause");
-  pause.addEventListener("click", (e) => {
-    let classes = document.getElementById("board").classList;
-    if (classes.contains("play")) {
-      console.log("currently playing");
-      document.removeEventListener("keyup", movePacman);
-      // if currently playing add pause class so request is cancelled when next attempt at animation frame occurs
-      classes.remove("play");
-      classes.add("pause");
-      //not actually paused yet just for referece
-      console.log("paused");
+  //play and pause spacebar event
+
+  document.addEventListener("keyup", (e) => {
+    if (e.code === "Space") {
+      let classes = document.getElementById("board").classList;
+      if (!classes.contains("play")) {
+        console.log("currently paused");
+        //start timer
+        timer();
+        // get rid of previuos prompt message
+        messageDisplay.innerHTML = "PRESS SPACE TO PAUSE";
+        // start or restart animation and pacman
+        document.addEventListener("keyup", movePacman);
+        window.requestAnimationFrame(moveAllGhosts);
+        classes.add("play");
+        console.log("playing");
+        console.log(classes);
+      } else if (classes.contains("play")) {
+        console.log("currently playing");
+        //pause timer
+        clearInterval(time);
+        document.removeEventListener("keyup", movePacman);
+        messageDisplay.innerHTML = "PRESS SPACE TO PLAY";
+        // if currently playing add pause class so request is cancelled when next attempt at animation frame occurs
+        classes.remove("play");
+        classes.add("pause");
+        //not actually paused yet just for referece
+        console.log("paused");
+        console.log(classes);
+      }
     }
-    console.log(classes);
   });
 
   // restart button
   let restart = document.getElementById("restart");
   restart.addEventListener("click", (e) => {
     let classes = document.getElementById("board").classList;
+    //clear timer
+    clearInterval(time);
+    document.getElementById("safeTimerDisplay").innerHTML = "00:00";
+    sec = 0;
+    min = 0;
     // stop pacman movement
     document.removeEventListener("keyup", movePacman);
     // if currently playing add in newGame class so request is cancelled when next attempt at animation frame occurs
@@ -350,7 +400,10 @@ document.addEventListener("DOMContentLoaded", () => {
     createBoard();
     // reset score
     scoreDisplay.innerHTML = "0";
+    //reset lives
+    livesDisplay.innerHTML = "3";
     console.log("game restarted");
     console.log(classes);
+    document.activeElement.blur();
   });
 });
