@@ -1,6 +1,10 @@
 .grid {
   display: flex;
   flex-wrap: wrap;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 560px;
   height: 560px;
   border: solid black;
@@ -31,14 +35,12 @@
   border-bottom: 1px solid black;
 }
 #overlay {
-    position: fixed;
-    /* opacity: 0; */
-    top: 0;
-    left 0;
-    right: 0;
-    bottom; 0;
-
-
+  position: fixed;
+  /* opacity: 0; */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .pac-dot {
   background-color: green;
@@ -50,7 +52,7 @@
   background-color: blue;
 }
 
-.blinky {
+/* .blinky {
   background-color: red;
   border: 0px;
 }
@@ -73,6 +75,98 @@
 .scared-ghost {
   background-color: aquamarine;
   border: 0px;
+} */
+
+.ghost {
+  position: relative;
+  border-radius: 10px 10px 2px 2px;
+  border: none;
+}
+
+.ghost::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: black;
+  border-radius: 50%;
+  left: 3px;
+  top: 5px;
+  border: 2px solid white;
+}
+
+.ghost::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: black;
+  border-radius: 50%;
+  right: 3px;
+  top: 5px;
+  border: 2px solid white;
+}
+
+.scared-ghost {
+  background: blue !important;
+}
+
+.blinky {
+  background: red;
+}
+
+.pinky {
+  background: pink;
+}
+
+.inky {
+  background: cyan;
+}
+
+.clyde {
+  background: orange;
+}
+
+.pac-man {
+  background: yellow;
+  border: none;
+  border-radius: 50%;
+  clip-path: polygon(
+    0 0,
+    20px 0,
+    20px -5px,
+    8px 10px,
+    20px 25px,
+    20px 20px,
+    0 20px
+  );
+  animation: chew 0.2s linear forwards infinite;
+}
+
+@keyframes chew {
+  50% {
+    clip-path: polygon(
+      0 0,
+      20px 0,
+      20px 10px,
+      8px 10px,
+      20px 10px,
+      20px 20px,
+      0 20px
+    );
+  }
+}
+
+.power-pellet {
+  background-color: green;
+  border-radius: 10px;
+}
+
+.pac-man {
+  background-color: yellow;
+  border-radius: 10px;
 }
 
 .power-pellet {
