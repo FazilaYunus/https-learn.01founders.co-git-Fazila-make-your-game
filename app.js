@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const scoreDisplay = document.getElementById("score");
-  const messageDisplay = document.getElementById("message");
+  const messageDisplay = document.getElementById("modal-text");
   const livesDisplay = document.getElementById("lives");
   const width = 28;
   let score = 0;
@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     console.log("Orignal ghost info---", ghosts);
 
-    messageDisplay.innerHTML = "PRESS SPACE TO START";
+    messageDisplay.innerHTML = "PRESS SPACE TO START GAME";
   }
 
   function clearBoard() {
@@ -345,6 +345,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keyup", (e) => {
     if (e.code === "Space") {
       let classes = document.getElementById("board").classList;
+      let startMessage =
+        document.getElementById("modal-play-message").classList;
       if (!classes.contains("play")) {
         console.log("currently paused");
         //start timer
@@ -355,6 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.addEventListener("keyup", movePacman);
         window.requestAnimationFrame(moveAllGhosts);
         classes.add("play");
+        startMessage.add("playing");
         console.log("playing");
         console.log(classes);
       } else if (classes.contains("play")) {
@@ -362,7 +365,8 @@ document.addEventListener("DOMContentLoaded", () => {
         //pause timer
         clearInterval(time);
         document.removeEventListener("keyup", movePacman);
-        messageDisplay.innerHTML = "PRESS SPACE TO PLAY";
+        messageDisplay.innerHTML = "PRESS SPACE TO RESUME GAME";
+        startMessage.remove("playing");
         // if currently playing add pause class so request is cancelled when next attempt at animation frame occurs
         classes.remove("play");
         classes.add("pause");
@@ -377,6 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let restart = document.getElementById("restart");
   restart.addEventListener("click", (e) => {
     let classes = document.getElementById("board").classList;
+    let startMessage = document.getElementById("modal-play-message").classList;
     //clear timer
     clearInterval(time);
     document.getElementById("safeTimerDisplay").innerHTML = "00:00";
@@ -389,6 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (classes.contains("play")) {
       classes.remove("play");
       classes.add("newGame");
+      startMessage.remove("playing");
     }
     // set pacman back to start index
     pacmanCurrentIndex = 490;
