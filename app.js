@@ -69,115 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
     new Ghost("clyde", 379, 500),
   ];
 
-  // function movePacman(e) {
-  //   squares[pacmanCurrentIndex].classList.remove("pac-man");
+  function movePacman(e) {
+    squares[pacmanCurrentIndex].classList.remove("pac-man");
 
-  //   switch (e.keyCode) {
-  //     case 37:
-  //       if (
-  //         pacmanCurrentIndex % width !== 0 &&
-  //         !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
-  //         !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
-  //       )
-  //         pacmanCurrentIndex -= 1;
-
-  //       if (pacmanCurrentIndex - 1 === 363) {
-  //         squares[pacmanCurrentIndex].classList.add("pac-man");
-  //         pacmanCurrentIndex = 391;
-  //         squares[364].classList.remove("pac-man");
-  //       }
-  //       break;
-  //     case 38:
-  //       if (
-  //         pacmanCurrentIndex - width >= 0 &&
-  //         !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
-  //         !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
-  //       )
-  //         pacmanCurrentIndex -= width;
-  //       break;
-  //     case 39:
-  //       if (
-  //         pacmanCurrentIndex % width < width - 1 &&
-  //         !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
-  //         !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
-  //       )
-  //         pacmanCurrentIndex += 1;
-
-  //       if (pacmanCurrentIndex + 1 === 392) {
-  //         squares[pacmanCurrentIndex].classList.add("pac-man");
-  //         pacmanCurrentIndex = 364;
-  //         squares[391].classList.remove("pac-man");
-  //       }
-  //       break;
-  //     case 40:
-  //       if (
-  //         pacmanCurrentIndex + width < width * width &&
-  //         !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
-  //         !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
-  //       )
-  //         pacmanCurrentIndex += width;
-  //       break;
-  //   }
-
-  //   squares[pacmanCurrentIndex].classList.add("pac-man");
-
-  //   pacDotEaten();
-  //   powerPelletEaten();
-  //   checkGameOver();
-  //   //checkForWin()
-  // }
-
-  function playAudio(audio) {
-    const soundEffect = new Audio(audio);
-    soundEffect.play();
-  }
-
-  document.onkeyup = function (e) {
-    console.log(directionChange);
-    directionChange = true;
-    console.log(directionChange);
-  };
-
-  document.onkeydown = function (e) {
-    directionChange = false;
     switch (e.keyCode) {
       case 37:
-        direction = "left";
-        break;
-      case 39:
-        direction = "right";
-        break;
-      case 38:
-        direction = "up";
-        break;
-      case 40:
-        direction = "down";
-        break;
-      default:
-        alert("Invalid key pressed");
-        break;
-    }
-  };
-
-  function movePacman() {
-    console.log(direction);
-    if (direction === "left") {
-      console.log("moving left");
-      moveLeft();
-    } else if (direction === "up") {
-      console.log("moving up");
-      moveUp();
-    } else if (direction === "right") {
-      moveRight();
-    } else if (direction === "down") {
-      moveDown();
-    }
-  }
-
-  function moveLeft() {
-    if (direction === "left") {
-      squares[pacmanCurrentIndex].classList.remove("pac-man");
-      if (directionChange === true) {
         if (
           pacmanCurrentIndex % width !== 0 &&
           !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
@@ -190,44 +86,16 @@ document.addEventListener("DOMContentLoaded", () => {
           pacmanCurrentIndex = 391;
           squares[364].classList.remove("pac-man");
         }
-
-        squares[pacmanCurrentIndex].classList.add("pac-man");
-        document.querySelector(".pac-man").style.transform = "rotate(180deg)";
-
-        pacDotEaten();
-        powerPelletEaten();
-        checkGameOver();
-        checkForWin();
-      }
-    }
-  }
-
-  function moveUp() {
-    if (direction === "up") {
-      squares[pacmanCurrentIndex].classList.remove("pac-man");
-      if (directionChange === true) {
+        break;
+      case 38:
         if (
           pacmanCurrentIndex - width >= 0 &&
           !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
           !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
         )
           pacmanCurrentIndex -= width;
-
-        squares[pacmanCurrentIndex].classList.add("pac-man");
-        document.querySelector(".pac-man").style.transform = "rotate(270deg)";
-
-        pacDotEaten();
-        powerPelletEaten();
-        checkGameOver();
-        checkForWin();
-      }
-    }
-  }
-
-  function moveRight() {
-    if (direction === "right") {
-      squares[pacmanCurrentIndex].classList.remove("pac-man");
-      if (directionChange === true) {
+        break;
+      case 39:
         if (
           pacmanCurrentIndex % width < width - 1 &&
           !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
@@ -240,41 +108,24 @@ document.addEventListener("DOMContentLoaded", () => {
           pacmanCurrentIndex = 364;
           squares[391].classList.remove("pac-man");
         }
-
-        squares[pacmanCurrentIndex].classList.add("pac-man");
-        document.querySelector(".pac-man").style.transform = "rotate(360deg)";
-
-        pacDotEaten();
-        powerPelletEaten();
-        checkGameOver();
-        checkForWin();
-      }
-    }
-  }
-
-  function moveDown() {
-    if (direction === "down") {
-      squares[pacmanCurrentIndex].classList.remove("pac-man");
-      if (directionChange === true) {
+        break;
+      case 40:
         if (
           pacmanCurrentIndex + width < width * width &&
           !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
           !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
         )
           pacmanCurrentIndex += width;
-
-        squares[pacmanCurrentIndex].classList.add("pac-man");
-        document.querySelector(".pac-man").style.transform = "rotate(90deg)";
-
-        pacDotEaten();
-        powerPelletEaten();
-        checkGameOver();
-        checkForWin();
-      }
+        break;
     }
-  }
 
-  var intervalUpdateState = setInterval(movePacman, 200);
+    squares[pacmanCurrentIndex].classList.add("pac-man");
+
+    pacDotEaten();
+    powerPelletEaten();
+    checkGameOver();
+    //checkForWin()
+  }
 
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
@@ -307,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gameOver) {
       // stop the ghost animation if the game is over
       //set gameover back to false
-      gameOver = false;
+      // gameOver = false;
       cancelAnimationFrame(request);
 
       console.log("Ghost animation cancelled - gameOver");
@@ -388,30 +239,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   let lives = 3;
   function checkGameOver() {
+    let startMessage = document.getElementById("modal-play-message").classList;
+    let classes = document.getElementById("board").classList;
     if (
       squares[pacmanCurrentIndex].classList.contains("ghost") &&
       !squares[pacmanCurrentIndex].classList.contains("scared-ghost")
     ) {
-      lives--;
-      livesDisplay.innerHTML = lives;
-      if (lives > 0) {
+      if (lives > 1) {
+        lives--;
+        livesDisplay.innerHTML = lives;
         squares[pacmanCurrentIndex].classList.remove("pac-man");
         pacmanCurrentIndex = 490;
         squares[490].classList.add("pac-man");
         return false;
       } else {
+        lives--;
+        livesDisplay.innerHTML = lives;
         //clear timer
         clearInterval(time);
         document.getElementById("safeTimerDisplay").innerHTML = "00:00";
         sec = 0;
         min = 0;
         document.removeEventListener("keyup", movePacman);
+        classes.remove("play");
         console.log("GAME OVER");
         scoreDisplay.innerHTML = 0;
         messageDisplay.innerHTML =
-          "GAME OVER- you scored " +
-          score +
-          ". Press the restart button below to begin a new game!";
+          "GAME OVER! PRESS RESTART TO BEGIN A NEW GAME";
+        startMessage.remove("playing");
 
         return true;
       }
@@ -499,6 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("modal-play-message").classList;
       if (!classes.contains("play")) {
         console.log("currently paused");
+        console.log("game over is ...", gameOver);
         //start timer
         timer();
         // get rid of previuos prompt message
@@ -558,6 +414,8 @@ document.addEventListener("DOMContentLoaded", () => {
     scoreDisplay.innerHTML = "0";
     //reset lives
     livesDisplay.innerHTML = "3";
+    //reset gameover to false
+    gameOver = false;
     console.log("game restarted");
     console.log(classes);
     document.activeElement.blur();
