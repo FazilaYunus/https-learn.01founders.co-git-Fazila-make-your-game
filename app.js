@@ -50,13 +50,13 @@ document.addEventListener("DOMContentLoaded", () => {
   //4 = empty
 
   const numOfDotsPellet = (function countDotsPellet() {
-    let num = 0
+    let num = 0;
     for (var i = 0; i < layout.length; i++) {
       if (layout[i] === 0 || layout[i] === 3) {
         num = num + 1;
       }
     }
-    return num
+    return num;
   })();
 
   let numDotsEaten = 0;
@@ -80,11 +80,112 @@ document.addEventListener("DOMContentLoaded", () => {
     new Ghost("clyde", 379, 500),
   ];
 
-  function movePacman(e) {
-    squares[pacmanCurrentIndex].classList.remove("pac-man");
+  // function movePacman(e) {
+  //   squares[pacmanCurrentIndex].classList.remove("pac-man");
 
+  //   switch (e.keyCode) {
+  //     case 37:
+  //       if (
+  //         pacmanCurrentIndex % width !== 0 &&
+  //         !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
+  //         !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
+  //       )
+  //         pacmanCurrentIndex -= 1;
+
+  //       if (pacmanCurrentIndex - 1 === 363) {
+  //         squares[pacmanCurrentIndex].classList.add("pac-man");
+  //         pacmanCurrentIndex = 391;
+  //         squares[364].classList.remove("pac-man");
+  //       }
+  //       break;
+  //     case 38:
+  //       if (
+  //         pacmanCurrentIndex - width >= 0 &&
+  //         !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
+  //         !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
+  //       )
+  //         pacmanCurrentIndex -= width;
+  //       break;
+  //     case 39:
+  //       if (
+  //         pacmanCurrentIndex % width < width - 1 &&
+  //         !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
+  //         !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
+  //       )
+  //         pacmanCurrentIndex += 1;
+
+  //       if (pacmanCurrentIndex + 1 === 392) {
+  //         squares[pacmanCurrentIndex].classList.add("pac-man");
+  //         pacmanCurrentIndex = 364;
+  //         squares[391].classList.remove("pac-man");
+  //       }
+  //       break;
+  //     case 40:
+  //       if (
+  //         pacmanCurrentIndex + width < width * width &&
+  //         !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
+  //         !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
+  //       )
+  //         pacmanCurrentIndex += width;
+  //       break;
+  //   }
+
+  //   squares[pacmanCurrentIndex].classList.add("pac-man");
+
+  //   pacDotEaten();
+  //   powerPelletEaten();
+  //   checkGameOver();
+  //   //checkForWin()
+  // }
+
+  function playAudio(audio) {
+    const soundEffect = new Audio(audio);
+    soundEffect.play();
+  }
+
+  document.onkeyup = function (e) {
+    console.log(directionChange);
+    directionChange = true;
+    console.log(directionChange);
+  };
+
+  document.onkeydown = function (e) {
+    directionChange = false;
     switch (e.keyCode) {
       case 37:
+        direction = "left";
+        break;
+      case 39:
+        direction = "right";
+        break;
+      case 38:
+        direction = "up";
+        break;
+      case 40:
+        direction = "down";
+        break;
+    }
+  };
+
+  function movePacman() {
+    console.log(direction);
+    if (direction === "left") {
+      console.log("moving left");
+      moveLeft();
+    } else if (direction === "up") {
+      console.log("moving up");
+      moveUp();
+    } else if (direction === "right") {
+      moveRight();
+    } else if (direction === "down") {
+      moveDown();
+    }
+  }
+
+  function moveLeft() {
+    if (direction === "left") {
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
+      if (directionChange === true) {
         if (
           pacmanCurrentIndex % width !== 0 &&
           !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
@@ -97,16 +198,44 @@ document.addEventListener("DOMContentLoaded", () => {
           pacmanCurrentIndex = 391;
           squares[364].classList.remove("pac-man");
         }
-        break;
-      case 38:
+
+        squares[pacmanCurrentIndex].classList.add("pac-man");
+        document.querySelector(".pac-man").style.transform = "rotate(180deg)";
+
+        pacDotEaten();
+        powerPelletEaten();
+        checkGameOver();
+        checkForWin();
+      }
+    }
+  }
+
+  function moveUp() {
+    if (direction === "up") {
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
+      if (directionChange === true) {
         if (
           pacmanCurrentIndex - width >= 0 &&
           !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
           !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
         )
           pacmanCurrentIndex -= width;
-        break;
-      case 39:
+
+        squares[pacmanCurrentIndex].classList.add("pac-man");
+        document.querySelector(".pac-man").style.transform = "rotate(270deg)";
+
+        pacDotEaten();
+        powerPelletEaten();
+        checkGameOver();
+        checkForWin();
+      }
+    }
+  }
+
+  function moveRight() {
+    if (direction === "right") {
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
+      if (directionChange === true) {
         if (
           pacmanCurrentIndex % width < width - 1 &&
           !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
@@ -119,27 +248,45 @@ document.addEventListener("DOMContentLoaded", () => {
           pacmanCurrentIndex = 364;
           squares[391].classList.remove("pac-man");
         }
-        break;
-      case 40:
+
+        squares[pacmanCurrentIndex].classList.add("pac-man");
+        document.querySelector(".pac-man").style.transform = "rotate(360deg)";
+
+        pacDotEaten();
+        powerPelletEaten();
+        checkGameOver();
+        checkForWin();
+      }
+    }
+  }
+
+  function moveDown() {
+    if (direction === "down") {
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
+      if (directionChange === true) {
         if (
           pacmanCurrentIndex + width < width * width &&
           !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
           !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
         )
           pacmanCurrentIndex += width;
-        break;
+
+        squares[pacmanCurrentIndex].classList.add("pac-man");
+        document.querySelector(".pac-man").style.transform = "rotate(90deg)";
+
+        pacDotEaten();
+        powerPelletEaten();
+        checkGameOver();
+        checkForWin();
+      }
     }
-
-    squares[pacmanCurrentIndex].classList.add("pac-man");
-
-    pacDotEaten();
-    powerPelletEaten();
-    checkGameOver();
-    //checkForWin()
   }
+
+  var intervalUpdateState = setInterval(movePacman, 200);
 
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
+      playAudio("./sounds/munch.wav");
       score++;
       numDotsEaten++;
       scoreDisplay.innerHTML = score;
@@ -149,6 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function powerPelletEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
+      playAudio("./sounds/pill.wav");
       score += 10;
       numDotsEaten++;
       ghosts.forEach((ghost) => (ghost.isScared = true));
@@ -220,6 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (ghost.isScared) {
+      playAudio("./sounds/eat_ghost.wav");
       // add scared class to new square if ghost was previously scared
       squares[ghost.currentIndex].classList.add("scared-ghost");
     }
@@ -266,6 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
         squares[490].classList.add("pac-man");
         return false;
       } else {
+        playAudio("./sounds/death.wav");
         lives--;
         livesDisplay.innerHTML = lives;
         //clear timer
@@ -286,6 +436,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return false;
   }
+
+  function checkForWin() {
+    if (numDotsEaten === numOfDotsPellet) {
+      scoreDisplay.innerHTML = "WINNER";
+      clearBoard();
+      createBoard();
+      numDotsEaten = 0;
+      pacmanCurrentIndex = 490;
+      score = 0;
+      return true;
+    }
+    return false;
+  }
+
   var sec = 0;
   var min = 0;
   var time;
