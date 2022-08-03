@@ -1,12 +1,24 @@
+/*
+things to do:
+1. change setinterval to requestanimation for pacman
+2. ghosts can't re-enter lair unless they are eaten
+3. space bar pauses ghosts but not pacman
+4. styling
+5. ghosts AI
+6. checkforwin not working
+7. gameover board not resetting - check hannah's version
+8. FPS
+*/
+
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const scoreDisplay = document.getElementById("score");
-  const messageDisplay = document.getElementById("message");
+  const messageDisplay = document.getElementById("modal-text");
+  const livesDisplay = document.getElementById("lives");
   const width = 28;
   let score = 0;
-  let direction = 'right';
+  let direction = "right";
   let directionChange = false;
-
   const layout = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
@@ -48,15 +60,14 @@ document.addEventListener("DOMContentLoaded", () => {
   //2 = ghost lair
   //3 = power-pellet
   //4 = empty
-
   const numOfDotsPellet = (function countDotsPellet() {
-    let num = 0
+    let num = 0;
     for (var i = 0; i < layout.length; i++) {
       if (layout[i] === 0 || layout[i] === 3) {
         num = num + 1;
       }
     }
-    return num
+    return num;
   })();
 
   let numDotsEaten = 0;
@@ -80,43 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
     new Ghost("clyde", 379, 500),
   ];
 
-  function createBoard() {
-    console.log("making board...");
-    for (let i = 0; i < layout.length; i++) {
-      const square = document.createElement("div");
-      grid.appendChild(square);
-
-      squares.push(square);
-
-      if (layout[i] === 0) {
-        squares[i].classList.add("pac-dot");
-      } else if (layout[i] === 1) {
-        squares[i].classList.add("wall");
-      } else if (layout[i] === 2) {
-        squares[i].classList.add("ghost-lair");
-      } else if (layout[i] === 3) {
-        squares[i].classList.add("power-pellet");
-      }
-    }
-
-    squares[490].classList.add("pac-man");
-
-    ghosts.forEach((ghost) => {
-      squares[ghost.startIndex].classList.add(ghost.className, "ghost");
-    });
-    console.log("Orignal ghost info---", ghosts);
-
-    messageDisplay.innerHTML = "PRESS PLAY TO START";
-  }
-
-  function clearBoard() {
-    let board = document.querySelector(".grid");
-    let grid = Array.from(board.querySelectorAll("div"));
-    grid.forEach((div) => {
-      board.removeChild(div);
-    });
-    squares = [];
-  }
 
   function playAudio(audio) {
     const soundEffect = new Audio(audio);
@@ -127,46 +101,44 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(directionChange);
     directionChange = true;
     console.log(directionChange);
-  }
+  };
 
   document.onkeydown = function (e) {
     directionChange = false;
     switch (e.keyCode) {
       case 37:
-        direction = 'left';
+        direction = "left";
         break;
       case 39:
-        direction = 'right';
+        direction = "right";
         break;
       case 38:
-        direction = 'up';
+        direction = "up";
         break;
       case 40:
-        direction = 'down';
-        break;
-      default:
-        alert('Invalid key pressed');
+        direction = "down";
         break;
     }
-  }
+  };
 
   function movePacman() {
     console.log(direction);
-    if (direction === 'left') {
-      console.log('moving left');
+    if (direction === "left") {
+      console.log("moving left");
       moveLeft();
-    } else if (direction === 'up') {
-      console.log('moving up');
+    } else if (direction === "up") {
+      console.log("moving up");
       moveUp();
-    } else if (direction === 'right') {
+    } else if (direction === "right") {
       moveRight();
-    } else if (direction === 'down') {
+    } else if (direction === "down") {
       moveDown();
     }
+    //window.requestAnimationFrame(movePacman);
   }
 
   function moveLeft() {
-    if (direction === 'left') {
+    if (direction === "left") {
       squares[pacmanCurrentIndex].classList.remove("pac-man");
       if (directionChange === true) {
         if (
@@ -189,13 +161,12 @@ document.addEventListener("DOMContentLoaded", () => {
         powerPelletEaten();
         checkGameOver();
         checkForWin();
-
       }
     }
   }
 
   function moveUp() {
-    if (direction === 'up') {
+    if (direction === "up") {
       squares[pacmanCurrentIndex].classList.remove("pac-man");
       if (directionChange === true) {
         if (
@@ -217,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function moveRight() {
-    if (direction === 'right') {
+    if (direction === "right") {
       squares[pacmanCurrentIndex].classList.remove("pac-man");
       if (directionChange === true) {
         if (
@@ -245,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function moveDown() {
-    if (direction === 'down') {
+    if (direction === "down") {
       squares[pacmanCurrentIndex].classList.remove("pac-man");
       if (directionChange === true) {
         if (
@@ -266,11 +237,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  var intervalUpdateState = setInterval(movePacman, 200);
+  window.requestAnimationFrame(movePacman);
+
+  //var intervalUpdateState = setInterval(movePacman, 200);
 
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
-      playAudio('./sounds/munch.wav');
+      playAudio("./sounds/munch.wav");
       score++;
       numDotsEaten++;
       scoreDisplay.innerHTML = score;
@@ -280,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function powerPelletEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
-      playAudio('./sounds/pill.wav');
+      playAudio("./sounds/pill.wav");
       score += 10;
       numDotsEaten++;
       ghosts.forEach((ghost) => (ghost.isScared = true));
@@ -303,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gameOver) {
       // stop the ghost animation if the game is over
       //set gameover back to false
-      gameOver = false;
+      // gameOver = false;
       cancelAnimationFrame(request);
 
       console.log("Ghost animation cancelled - gameOver");
@@ -311,7 +284,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (classes.contains("pause")) {
       classes.remove("pause");
       cancelAnimationFrame(request);
-      messageDisplay.innerHTML = "PAUSED";
       console.log(classes);
     } else if (classes.contains("newGame")) {
       classes.remove("newGame");
@@ -360,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ghost.isScared &&
       squares[ghost.currentIndex].classList.contains("pac-man")
     ) {
-      playAudio('./sounds/eat_ghost.wav');
+      playAudio("./sounds/eat_ghost.wav");
       // if a ghost is in the same square as pacman while scares remove the ghost
       squares[ghost.currentIndex].classList.remove(
         ghost.className,
@@ -377,77 +349,214 @@ document.addEventListener("DOMContentLoaded", () => {
     // returns true or false
     if (!gameOver) {
       gameOver = checkGameOver();
+    } else {
+      console.log(lives);
     }
 
     // }, ghost.speed);
   }
+  let lives = 3;
   function checkGameOver() {
+    let startMessage = document.getElementById("modal-play-message").classList;
+    let classes = document.getElementById("board").classList;
     if (
       squares[pacmanCurrentIndex].classList.contains("ghost") &&
       !squares[pacmanCurrentIndex].classList.contains("scared-ghost")
     ) {
-      playAudio('./sounds/death.wav');
-      ghosts.forEach((ghost) => clearInterval(ghost.timerID));
-      document.removeEventListener("keyup", movePacman);
-      scoreDisplay.innerHTML = "GAME OVER you scored " + score;
-      clearBoard();
-      createBoard();
-      numDotsEaten = 0;
-      pacmanCurrentIndex = 490;
-      return true;
+      playAudio("./sounds/death.wav");
+      if (lives > 1) {
+        lives--;
+        livesDisplay.innerHTML = lives;
+        squares[pacmanCurrentIndex].classList.remove("pac-man");
+        pacmanCurrentIndex = 490;
+        squares[490].classList.add("pac-man");
+        return false;
+      } else {
+        lives--;
+        livesDisplay.innerHTML = lives;
+        //clear timer
+        clearInterval(time);
+        document.getElementById("safeTimerDisplay").innerHTML = "00:00";
+        sec = 0;
+        min = 0;
+        document.removeEventListener("keyup", movePacman);
+        classes.remove("play");
+        console.log("GAME OVER");
+        scoreDisplay.innerHTML = 0;
+        messageDisplay.innerHTML =
+          "GAME OVER! PRESS RESTART TO BEGIN A NEW GAME";
+        startMessage.remove("playing");
+
+        return true;
+      }
     }
     return false;
   }
 
   function checkForWin() {
+    let startMessage = document.getElementById("modal-play-message").classList;
+    let classes = document.getElementById("board").classList;
     if (numDotsEaten === numOfDotsPellet) {
       scoreDisplay.innerHTML = "WINNER";
-      clearBoard();
-      createBoard();
-      numDotsEaten = 0;
-      pacmanCurrentIndex = 490;
-      score = 0;
+      clearInterval(time);
+      document.getElementById("safeTimerDisplay").innerHTML = "00:00";
+      sec = 0;
+      min = 0;
+      document.removeEventListener("keyup", movePacman);
+      classes.remove("play");
+      console.log("GAME OVER");
+      scoreDisplay.innerHTML = 0;
+      startMessage.remove("playing");
+
       return true;
     }
     return false;
   }
 
+  var sec = 0;
+  var min = 0;
+  var time;
+  function timer() {
+    time = setInterval(function () {
+      if (sec === 60) {
+        sec = 0;
+        min++;
+      }
+      if (sec < 10 && min < 10) {
+        document.getElementById("safeTimerDisplay").innerHTML =
+          "0" + min + ":0" + sec;
+      } else if (sec >= 10 && min < 10) {
+        document.getElementById("safeTimerDisplay").innerHTML =
+          "0" + min + ":" + sec;
+      } else if (min >= 10 && sec < 10) {
+        document.getElementById("safeTimerDisplay").innerHTML =
+          min + ":0" + sec;
+      } else {
+        min + ":" + sec;
+      }
+
+      sec++;
+      if (min === 60) {
+        clearInterval(time);
+      }
+    }, 1000);
+  }
+
+  function createBoard() {
+    console.log("making board...");
+    for (let i = 0; i < layout.length; i++) {
+      const square = document.createElement("div");
+      grid.appendChild(square);
+
+      squares.push(square);
+
+      if (layout[i] === 0) {
+        squares[i].classList.add("pac-dot");
+      } else if (layout[i] === 1) {
+        squares[i].classList.add("wall");
+      } else if (layout[i] === 2) {
+        squares[i].classList.add("ghost-lair");
+      } else if (layout[i] === 3) {
+        squares[i].classList.add("power-pellet");
+      }
+    }
+
+    squares[490].classList.add("pac-man");
+
+    ghosts.forEach((ghost) => {
+      squares[ghost.startIndex].classList.add(ghost.className, "ghost");
+    });
+    console.log("Orignal ghost info---", ghosts);
+
+    messageDisplay.innerHTML = "PRESS SPACE TO START GAME";
+  }
+
+  function clearBoard() {
+    let board = document.querySelector(".grid");
+    let grid = Array.from(board.querySelectorAll("div"));
+    grid.forEach((div) => {
+      board.removeChild(div);
+    });
+    console.log("board cleared");
+    squares = [];
+  }
   createBoard();
-  //document.addEventListener("keyup", movePacman);
-  window.requestAnimationFrame(moveAllGhosts);
-  //play button
-  let play = document.getElementById("play");
-  play.addEventListener("click", (e) => {
-    let classes = document.getElementById("board").classList;
-    if (classes.contains("pause")) {
-      console.log("currently paused");
-      document.addEventListener("keyup", movePacman);
-      window.requestAnimationFrame(moveAllGhosts);
-      classes.remove("pause");
-      classes.add("play");
-      console.log("playing");
-    }
-    console.log(classes);
+  document.addEventListener("keyup", (e) => {
+    console.log(e.code);
   });
-  //pause button
-  let pause = document.getElementById("pause");
-  pause.addEventListener("click", (e) => {
-    let classes = document.getElementById("board").classList;
-    if (classes.contains("play")) {
-      console.log("currently playing");
-      document.removeEventListener("keyup", movePacman);
-      window.cancelAnimationFrame(moveAllGhosts);
-      classes.remove("play");
-      classes.add("pause");
-      console.log("paused");
+
+  //play and pause spacebar event
+  document.addEventListener("keyup", (e) => {
+    if (e.code === "Space") {
+      let classes = document.getElementById("board").classList;
+      let startMessage =
+        document.getElementById("modal-play-message").classList;
+      if (!classes.contains("play")) {
+        console.log("currently paused");
+        console.log("game over is ...", gameOver);
+        //start timer
+        timer();
+        // get rid of previuos prompt message
+        messageDisplay.innerHTML = "PRESS SPACE TO PAUSE";
+        // start or restart animation and pacman
+        document.addEventListener("keyup", movePacman);
+        window.requestAnimationFrame(moveAllGhosts);
+        classes.add("play");
+        startMessage.add("playing");
+        console.log("playing");
+        console.log(classes);
+      } else if (classes.contains("play")) {
+        console.log("currently playing");
+        //pause timer
+        clearInterval(time);
+        document.removeEventListener("keyup", movePacman);
+        messageDisplay.innerHTML = "PRESS SPACE TO RESUME GAME";
+        startMessage.remove("playing");
+        // if currently playing add pause class so request is cancelled when next attempt at animation frame occurs
+        classes.remove("play");
+        classes.add("pause");
+        //not actually paused yet just for referece
+        console.log("paused");
+        console.log(classes);
+      }
     }
-    console.log(classes);
   });
-  // restart button // create board not working
+
+  // restart button
   let restart = document.getElementById("restart");
   restart.addEventListener("click", (e) => {
-    window.cancelAnimationFrame(moveAllGhosts);
+    let classes = document.getElementById("board").classList;
+    let startMessage = document.getElementById("modal-play-message").classList;
+    //clear timer
+    clearInterval(time);
+    document.getElementById("safeTimerDisplay").innerHTML = "00:00";
+    sec = 0;
+    min = 0;
+    // stop pacman movement
+    document.removeEventListener("keyup", movePacman);
+    // if currently playing add in newGame class so request is cancelled when next attempt at animation frame occurs
+    // only necessary if game is not already paused
+    if (classes.contains("play")) {
+      classes.remove("play");
+      classes.add("newGame");
+      startMessage.remove("playing");
+    }
+    // set pacman back to start index
+    pacmanCurrentIndex = 490;
+    // set ghosts current index pack to start index
+    ghosts.forEach((ghost) => {
+      ghost.currentIndex = ghost.startIndex;
+    });
     clearBoard();
     createBoard();
+    // reset score
+    scoreDisplay.innerHTML = "0";
+    //reset lives
+    livesDisplay.innerHTML = "3";
+    //reset gameover to false
+    gameOver = false;
+    console.log("game restarted");
+    console.log(classes);
+    document.activeElement.blur();
   });
 });
