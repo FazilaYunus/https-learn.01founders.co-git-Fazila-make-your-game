@@ -21,24 +21,36 @@
     background-color: blue;
 }
 
-/*.blinky {
-    background-color: red;
-    border: 0px;
+.ghost {
+  position: relative;
+  border-radius: 10px 10px 2px 2px;
+  border: none;
 }
 
-.pinky {
-    background-color: pink;
-    border: 0px;
+.ghost::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: black;
+  border-radius: 50%;
+  left: 3px;
+  top: 5px;
+  border: 2px solid white;
 }
 
-.inky {
-    background-color: cyan;
-    border: 0px;
-}
-
-.clyde {
-    background-color: orange;
-    border: 0px;
+.ghost::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: black;
+  border-radius: 50%;
+  right: 3px;
+  top: 5px;
+  border: 2px solid white;
 }
 
 .scared-ghost {
@@ -123,17 +135,53 @@
     );
     animation: chew 0.2s linear forwards infinite;
   }
+
+
+.power-pellet {
+  background-color: green;
+  border-radius: 10px;
+}
+
+.pac-man {
+  background-color: yellow;
+  border-radius: 10px;
+}
+
+.power-pellet {
+  background-color: green;
+  border-radius: 10px;
+}
+
+.pac-man {
+  background-color: yellow;
+  border-radius: 10px;
+}
+
+.heart {
+  background-color:red;
+  width: 15px;
+  height: 15px;
+  position: relative;
+  transform: rotate(45deg);
   
-  @keyframes chew {
-    50% {
-      clip-path: polygon(
-        0 0,
-        20px 0,
-        20px 10px,
-        8px 10px,
-        20px 10px,
-        20px 20px,
-        0 20px
-      );
-    }
-  }
+}
+  
+.heart::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background-color:red;
+  position: absolute;
+  border-radius: 50%;
+  left: -7.5px;
+}
+  
+.heart::after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  position: absolute;
+  border-radius: 50%;
+  top: -7.5px;
+}
