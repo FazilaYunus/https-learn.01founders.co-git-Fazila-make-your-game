@@ -357,6 +357,14 @@ document.addEventListener("DOMContentLoaded", () => {
         ghost.currentIndex += direction;
         squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
       }
+    } else if (ghost.currentIndex - direction === 363) {
+      squares[ghost.currentIndex].classList.add("ghost");
+      ghost.currentIndex = 391;
+      squares[364].classList.remove(ghost.className, "ghost", "scared-ghost");
+    } else if (ghost.currentIndex + direction === 392) {
+      squares[ghost.currentIndex].classList.add("ghost");
+      ghost.currentIndex = 364;
+      squares[391].classList.remove(ghost.className, "ghost", "scared-ghost");
     } else {
       // else find a new direction
       direction = directions[Math.floor(Math.random() * directions.length)];
@@ -404,7 +412,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       if (lives > 1) {
         lives--;
-        livesDisplay.innerHTML = lives;
+        livesUsed = livesUsed + 1;
+        const element = document.getElementById("life" + livesUsed);
+        element.remove();
         squares[pacmanCurrentIndex].classList.remove("pac-man");
         pacmanCurrentIndex = 490;
         squares[490].classList.add("pac-man");
@@ -412,6 +422,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         playAudio("./sounds/death.wav");
         lives--;
+        const element = document.getElementById("life3");
+        element.remove();
         livesDisplay.innerHTML = lives;
         //clear timer
         clearInterval(time);
@@ -475,7 +487,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         min + ":" + sec;
       }
-
       sec++;
       if (min === 60) {
         clearInterval(time);
