@@ -7,7 +7,8 @@
   transform: translate(-50%, -50%);
   width: 560px;
   height: 560px;
-  border: solid black;
+  /*border: solid black;*/
+  background: black;
 }
 
 .grid div {
@@ -48,44 +49,21 @@
   background-color: rgba(0, 0, 0, 0.5);
   pointer-events: none;
 }
+
 #overlay.active {
   opacity: 1;
   pointer-events: all;
 }
+
 .pac-dot {
-  background-color: green;
-  border: 5px solid white;
+  background-color: white;
+  border: 7px solid black;
   box-sizing: border-box;
 }
 
 .wall {
   background-color: blue;
 }
-
-/* .blinky {
-  background-color: red;
-  border: 0px;
-}
-
-.pinky {
-  background-color: pink;
-  border: 0px;
-}
-
-.inky {
-  background-color: cyan;
-  border: 0px;
-}
-
-.clyde {
-  background-color: orange;
-  border: 0px;
-}
-
-.scared-ghost {
-  background-color: aquamarine;
-  border: 0px;
-} */
 
 .ghost {
   position: relative;
@@ -120,7 +98,7 @@
 }
 
 .scared-ghost {
-  background: blue !important;
+  background: rgb(139, 139, 141) !important;
 }
 
 .blinky {
@@ -156,7 +134,7 @@
 }
 
 @keyframes chew {
-  50% {
+  90% {
     clip-path: polygon(
       0 0,
       20px 0,
@@ -170,21 +148,35 @@
 }
 
 .power-pellet {
-  background-color: green;
+  background-color: white;
   border-radius: 10px;
 }
 
-.pac-man {
-  background-color: yellow;
-  border-radius: 10px;
+.heart {
+  background-color:red;
+  width: 15px;
+  height: 15px;
+  position: relative;
+  transform: rotate(45deg);
+  
 }
-
-.power-pellet {
-  background-color: green;
-  border-radius: 10px;
+  
+.heart::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background-color:red;
+  position: absolute;
+  border-radius: 50%;
+  left: -7.5px;
 }
-
-.pac-man {
-  background-color: yellow;
-  border-radius: 10px;
+  
+.heart::after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  position: absolute;
+  border-radius: 50%;
+  top: -7.5px;
 }
