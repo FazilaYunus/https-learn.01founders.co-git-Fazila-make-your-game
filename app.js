@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let directionChange = false;
   var letMoveGhost = 0;
   var letMovePacman = 0;
+  let lives = 3;
+  let livesUsed = 0;
   const layout = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -88,6 +90,18 @@ document.addEventListener("DOMContentLoaded", () => {
   function playAudio(audio) {
     const soundEffect = new Audio(audio);
     soundEffect.play();
+  }
+
+  function drawHearts() {
+    for (var i = 0; i < lives; i++) {
+      const livesDiv = document.createElement("div");
+      livesDiv.classList.add("heart");
+      livesDiv.setAttribute("id", "life" + (i + 1));
+      livesDiv.style.display = "inline-block";
+      livesDiv.style.marginLeft = "10px";
+      livesDiv.style.marginBottom = "5px"
+      document.getElementById("lives").appendChild(livesDiv);
+    }
   }
 
   document.onkeyup = function (e) {
@@ -380,7 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // }, ghost.speed);
   }
-  let lives = 3;
+
   function checkGameOver() {
     let startMessage = document.getElementById("modal-play-message").classList;
     let classes = document.getElementById("board").classList;
@@ -470,6 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function createBoard() {
+    drawHearts();
     console.log("making board...");
     for (let i = 0; i < layout.length; i++) {
       const square = document.createElement("div");
