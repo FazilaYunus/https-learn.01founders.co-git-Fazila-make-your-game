@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let direction = "right";
   let directionChange = false;
   var letMoveGhost = 0;
-  var letMovePacman = 0;
   let lives = 3;
   let livesUsed = 0;
   const layout = [
@@ -105,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       livesDiv.style.marginLeft = "10px";
       livesDiv.style.marginBottom = "5px";
       document.getElementById("lives").appendChild(livesDiv);
+      console.log(`heart ${i} added`);
     }
   }
 
@@ -114,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.onkeydown = function (e) {
     directionChange = false;
-    console.log(e.code);
     switch (e.code) {
       case "ArrowLeft":
         direction = "left";
@@ -139,14 +138,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let classes = document.getElementById("board").classList;
     intervalUpdateState = requestAnimationFrame(movePacman);
     // console.log(direction);
-    console.log(gameOver);
-    letMovePacman++;
     if (time - elapsed >= 400) {
       if (direction === "left") {
-        console.log("moving left");
+        // console.log("moving left");
         winner = moveLeft();
       } else if (direction === "up") {
-        console.log("moving up");
+        // console.log("moving up");
         moveUp();
       } else if (direction === "right") {
         moveRight();
@@ -157,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
         cancelAnimationFrame(intervalUpdateState);
         console.log("Pac-Man animation cancelled - winner");
       }
-      gameOverP = checkGameOver();
       if (gameOverP) {
         cancelAnimationFrame(intervalUpdateState);
 
@@ -192,7 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         pacDotEaten();
         powerPelletEaten();
-        gameOver = checkGameOver();
         winner = checkForWin();
       }
     }
@@ -214,7 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         pacDotEaten();
         powerPelletEaten();
-        gameOver = checkGameOver();
         winner = checkForWin();
       }
     }
@@ -242,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         pacDotEaten();
         powerPelletEaten();
-        gameOver = checkGameOver();
+        // gameOver = checkGameOverP();
         winner = checkForWin();
       }
     }
@@ -264,7 +258,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         pacDotEaten();
         powerPelletEaten();
-        gameOver = checkGameOver();
         winner = checkForWin();
       }
     }
@@ -305,21 +298,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (winner) {
       cancelAnimationFrame(request);
 
-      console.log("Pac-Man animation cancelled - gameOver");
-    }
-    if (gameOver) {
+      console.log("Ghost animation cancelled - Winner");
+    } else if (gameOver) {
       // stop the ghost animation if the game is over
       //set gameover back to false
       // gameOver = false;
       cancelAnimationFrame(request);
 
       console.log("Ghost animation cancelled - gameOver");
-    }
-    if (classes.contains("pause")) {
+    } else if (classes.contains("pause")) {
       classes.remove("pause");
       cancelAnimationFrame(intervalUpdateState);
       cancelAnimationFrame(request);
-      console.log(classes);
+      // console.log(classes);
     } else if (classes.contains("newGame")) {
       classes.remove("newGame");
       cancelAnimationFrame(request);
@@ -399,9 +390,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // returns true or false
     if (!gameOver) {
+      // if game hasnt ended  check game over 
       gameOver = checkGameOver();
+      // asign true or false for pacman gameover as well so you dont have to call checkgameover within packman loop
+      gameOverP = gameOver;
     } else {
-      console.log(lives);
+      console.log("gameover is ", gameOver);
+      console.log(livesUsed);
     }
 
     // }, ghost.speed);
@@ -473,7 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
       min = 0;
       document.removeEventListener("keyup", movePacman);
       classes.remove("play");
-      console.log("GAME OVER");
+      console.log("WINNER");
       scoreDisplay.innerHTML = 0;
       messageDisplay.innerHTML = "YOU WON! PRESS RESTART TO BEGIN A NEW GAME";
       startMessage.remove("playing");
@@ -557,7 +552,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //play and pause spacebar event
 
   document.addEventListener("keyup", (e) => {
-    console.log(e.code);
     if (e.code === "Space") {
       let classes = document.getElementById("board").classList;
       let startMessage =
@@ -616,16 +610,19 @@ document.addEventListener("DOMContentLoaded", () => {
       ghosts.forEach((ghost) => {
         ghost.currentIndex = ghost.startIndex;
       });
-      clearBoard();
-      createBoard();
       // reset score
       scoreDisplay.innerHTML = "0";
       //reset lives
+      livesUsed = 0;
       lives = 3;
       livesDisplay.innerHTML = "3";
       //reset gameover to false
       gameOver = false;
       winner = false;
+      //create new board
+      clearBoard();
+      createBoard();
+
       console.log("game restarted");
       console.log(classes);
       document.activeElement.blur();
