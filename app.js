@@ -153,13 +153,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (winner) {
         cancelAnimationFrame(intervalUpdateState);
         console.log("Pac-Man animation cancelled - winner");
-      }
-      if (gameOverP) {
+      } else if (gameOverP) {
         cancelAnimationFrame(intervalUpdateState);
 
         console.log("Pac-Man animation cancelled - gameOver");
-      }
-      if (!classes.contains("play")) {
+      } else if (!classes.contains("play")) {
         cancelAnimationFrame(intervalUpdateState);
       }
       elapsed = time;
@@ -297,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
     request = requestAnimationFrame(moveAllGhosts);
     if (winner) {
       cancelAnimationFrame(request);
-
       console.log("Ghost animation cancelled - Winner");
     } else if (gameOver) {
       // stop the ghost animation if the game is over
@@ -306,9 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cancelAnimationFrame(request);
 
       console.log("Ghost animation cancelled - gameOver");
-    } else if (classes.contains("pause")) {
-      classes.remove("pause");
-      cancelAnimationFrame(intervalUpdateState);
+    } else if (!classes.contains("play")) {
       cancelAnimationFrame(request);
       // console.log(classes);
     } else if (classes.contains("newGame")) {
@@ -390,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // returns true or false
     if (!gameOver) {
-      // if game hasnt ended  check game over 
+      // if game hasnt ended  check game over
       gameOver = checkGameOver();
       // asign true or false for pacman gameover as well so you dont have to call checkgameover within packman loop
       gameOverP = gameOver;
@@ -456,11 +451,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkForWin() {
+    let classes = document.getElementById("board").classList;
+    let startMessage = document.getElementById("modal-play-message").classList;
     if (numDotsEaten === numOfDotsPellet) {
       scoreDisplay.innerHTML = "WINNER";
       numDotsEaten = 0;
-      pacmanCurrentIndex = 490;
-      score = 0;
+      // pacmanCurrentIndex = 490;
+      // score = 0;
       //clear timer
       clearInterval(time);
       document.getElementById("safeTimerDisplay").innerHTML = "00:00";
@@ -580,7 +577,7 @@ document.addEventListener("DOMContentLoaded", () => {
         startMessage.remove("playing");
         // if currently playing add pause class so request is cancelled when next attempt at animation frame occurs
         classes.remove("play");
-        classes.add("pause");
+        // classes.add("pause");
         //not actually paused yet just for referece
         console.log("paused");
         console.log(classes);
@@ -627,44 +624,5 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(classes);
       document.activeElement.blur();
     }
-  });
-
-  // restart button
-  let restart = document.getElementById("restart");
-  restart.addEventListener("click", (e) => {
-    let classes = document.getElementById("board").classList;
-    let startMessage = document.getElementById("modal-play-message").classList;
-    //clear timer
-    clearInterval(time);
-    document.getElementById("safeTimerDisplay").innerHTML = "00:00";
-    sec = 0;
-    min = 0;
-    // stop pacman movement
-    document.removeEventListener("keyup", movePacman);
-    // if currently playing add in newGame class so request is cancelled when next attempt at animation frame occurs
-    // only necessary if game is not already paused
-    if (classes.contains("play")) {
-      classes.remove("play");
-      classes.add("newGame");
-      startMessage.remove("playing");
-    }
-    // set pacman back to start index
-    pacmanCurrentIndex = 490;
-    // set ghosts current index pack to start index
-    ghosts.forEach((ghost) => {
-      ghost.currentIndex = ghost.startIndex;
-    });
-    clearBoard();
-    createBoard();
-    // reset score
-    scoreDisplay.innerHTML = "0";
-    //reset lives
-    livesDisplay.innerHTML = "3";
-    //reset gameover to false
-    gameOver = false;
-    winner = false;
-    console.log("game restarted");
-    console.log(classes);
-    document.activeElement.blur();
   });
 });
