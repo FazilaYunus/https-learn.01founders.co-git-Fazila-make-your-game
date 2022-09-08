@@ -457,7 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("safeTimerDisplay").innerHTML = "00:00";
         sec = 0;
         min = 0;
-      
+
         classes.remove("play");
         console.log("GAME OVER");
         //set score to 0
