@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.onkeyup = function (e) {
     directionChange = true;
   };
-
+  let winner;
   document.onkeydown = function (e) {
     directionChange = false;
     switch (e.code) {
@@ -127,13 +127,17 @@ document.addEventListener("DOMContentLoaded", () => {
       case "ArrowDown":
         direction = "down";
         break;
+      case "KeyC":
+        winner = true;
+        document.getElementById("board").classList.add("winner");
+        break;
     }
   };
   let intervalUpdateState;
   let elapsed = 0;
   let gameOverP;
   let gameOver;
-  let winner;
+
   function movePacman(time) {
     let classes = document.getElementById("board").classList;
     intervalUpdateState = requestAnimationFrame(movePacman);
@@ -141,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (time - elapsed >= 400) {
       if (direction === "left") {
         // console.log("moving left");
-        winner = moveLeft();
+        moveLeft();
       } else if (direction === "up") {
         // console.log("moving up");
         moveUp();
@@ -150,14 +154,16 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (direction === "down") {
         moveDown();
       }
-      if (winner) {
+      if (winner || classes.contains("winner")) {
         cancelAnimationFrame(intervalUpdateState);
         console.log("Pac-Man animation cancelled - winner");
-      } else if (gameOverP) {
+      }
+      if (gameOverP) {
         cancelAnimationFrame(intervalUpdateState);
 
         console.log("Pac-Man animation cancelled - gameOver");
-      } else if (!classes.contains("play")) {
+      }
+      if (!classes.contains("play")) {
         cancelAnimationFrame(intervalUpdateState);
       }
       elapsed = time;
@@ -187,6 +193,9 @@ document.addEventListener("DOMContentLoaded", () => {
         pacDotEaten();
         powerPelletEaten();
         winner = checkForWin();
+        if (winner) {
+          console.log("pacman found winner");
+        }
       }
     }
   }
@@ -208,6 +217,9 @@ document.addEventListener("DOMContentLoaded", () => {
         pacDotEaten();
         powerPelletEaten();
         winner = checkForWin();
+        if (winner) {
+          console.log("pacman found winner");
+        }
       }
     }
   }
@@ -236,6 +248,9 @@ document.addEventListener("DOMContentLoaded", () => {
         powerPelletEaten();
         // gameOver = checkGameOverP();
         winner = checkForWin();
+        if (winner) {
+          console.log("pacman found winner");
+        }
       }
     }
   }
@@ -257,6 +272,9 @@ document.addEventListener("DOMContentLoaded", () => {
         pacDotEaten();
         powerPelletEaten();
         winner = checkForWin();
+        if (winner) {
+          console.log("pacman found winner");
+        }
       }
     }
   }
@@ -428,7 +446,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
       } else {
         playAudio("./sounds/death.wav");
+        // remove a lfe
         lives--;
+        // remove the last heart image
         const element = document.getElementById("life3");
         element.remove();
         livesDisplay.innerHTML = lives;
@@ -437,10 +457,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("safeTimerDisplay").innerHTML = "00:00";
         sec = 0;
         min = 0;
-        document.removeEventListener("keyup", movePacman);
+      
         classes.remove("play");
         console.log("GAME OVER");
+        //set score to 0
         scoreDisplay.innerHTML = 0;
+        // display restart message
         messageDisplay.innerHTML = "GAME OVER! PRESS R TO BEGIN A NEW GAME";
         startMessage.remove("playing");
 
@@ -455,19 +477,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let startMessage = document.getElementById("modal-play-message").classList;
     if (numDotsEaten === numOfDotsPellet) {
       scoreDisplay.innerHTML = "WINNER";
-      numDotsEaten = 0;
-      // pacmanCurrentIndex = 490;
-      // score = 0;
       //clear timer
       clearInterval(time);
       document.getElementById("safeTimerDisplay").innerHTML = "00:00";
       sec = 0;
       min = 0;
-      document.removeEventListener("keyup", movePacman);
+      classes.add("winner");
       classes.remove("play");
       console.log("WINNER");
-      scoreDisplay.innerHTML = 0;
-      messageDisplay.innerHTML = "YOU WON! PRESS RESTART TO BEGIN A NEW GAME";
+      messageDisplay.innerHTML = "YOU WON! PRESS R TO BEGIN A NEW GAME";
       startMessage.remove("playing");
       return true;
     }
@@ -558,12 +576,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("game over is ...", gameOver);
         //start timer
         timer();
-        // get rid of previuos prompt message
+        // get rid of previuos prompt message add play class to grid
         messageDisplay.innerHTML = "PRESS SPACE TO PAUSE";
         classes.add("play");
         startMessage.add("playing");
         // start or restart animation and pacman
-        document.addEventListener("keyup", movePacman);
         window.requestAnimationFrame(moveAllGhosts);
         window.requestAnimationFrame(movePacman);
         console.log("playing");
@@ -592,9 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("safeTimerDisplay").innerHTML = "00:00";
       sec = 0;
       min = 0;
-      // stop pacman movement
-      document.removeEventListener("keyup", movePacman);
-      // if currently playing add in newGame class so request is cancelled when next attempt at animation frame occurs
+      // if currently playing, add in newGame class so request is cancelled when next attempt at animation frame occurs
       // only necessary if game is not already paused
       if (classes.contains("play")) {
         classes.remove("play");
@@ -607,6 +622,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ghosts.forEach((ghost) => {
         ghost.currentIndex = ghost.startIndex;
       });
+      // winner
+      classes.remove("winner");
       // reset score
       scoreDisplay.innerHTML = "0";
       //reset lives
@@ -616,12 +633,16 @@ document.addEventListener("DOMContentLoaded", () => {
       //reset gameover to false
       gameOver = false;
       winner = false;
-      //create new board
+      // reset number of dots eaten
+      numDotsEaten = 0;
+      //clear old board and create new board
       clearBoard();
       createBoard();
 
       console.log("game restarted");
       console.log(classes);
+
+      //prevent space button from selecting
       document.activeElement.blur();
     }
   });
