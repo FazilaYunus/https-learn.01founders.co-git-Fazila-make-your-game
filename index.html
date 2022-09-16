@@ -6,6 +6,7 @@
     <title>Pac Man</title>
     <link rel="stylesheet" href="style.css">
     </link>
+    <link rel="icon" href="data:;base64,=">
     <script src="app.js" charset="utf-8"></script>
     <style>
         @font-face {
@@ -28,14 +29,14 @@
     </div>
 
     <div id="safeTimer" style="text-align: center">
-        <p style="display: inline-block; margin-left: 10px">Timer</p>
+        <p style="display: inline-block; margin-left: 100px">Timer</p>
         <p style="display: inline-block; margin-left: 10px; font-family: 'Courier New', Courier, monospace;"
             id="safeTimerDisplay">00:00</p>
-        <p style="display: inline-block; margin-left: 10px">Score:</p>
+        <p style="display: inline-block; margin-left: 30px">Score:</p>
         <p style="display: inline-block; margin-left: 10px; font-family: 'Courier New', Courier, monospace;"><span
                 id="score">0</span></p>
 
-        <p style="display: inline-block; margin-left: 10px">Lives:</p>
+        <p style="display: inline-block; margin-left: 30px">Lives:</p>
         <p style="display: inline-block; margin-left: 10px"><span id="lives"></span></p>
     </div>
     <div id='board' class="grid"></div>
@@ -43,6 +44,15 @@
     <div class="modal" id="modal-play-message">
         <div class="modal-body">
             <h1 id="modal-text"></h1>
+        </div>
+        <div class="modal-directions">
+            <p>&#8593 - Move Up</p>
+            <p>&#8595 - Move Down</p>
+            <p>&#8594 - Move Right</p>
+            <p>&#8592 - Move Left</p>
+            <p>{space-bar} - Pause Game</p>
+            <p>R - Restart Game</p>
+
         </div>
     </div>
     <div id="overlay"></div>

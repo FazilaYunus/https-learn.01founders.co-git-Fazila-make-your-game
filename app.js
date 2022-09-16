@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   var letMoveGhost = 0;
   let lives = 3;
   let livesUsed = 0;
+  let ghostEaten = 0;
   const layout = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
@@ -304,6 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function unScareGhosts() {
     ghosts.forEach((ghost) => (ghost.isScared = false));
+    ghostEaten = 0;
   }
 
   let request;
@@ -334,10 +336,13 @@ document.addEventListener("DOMContentLoaded", () => {
     //creates a request for new frame each time one is made
   }
 
+
+
   function moveGhost(ghost) {
     //ghost movement increments
     const directions = [-1, +1, width, -width];
     // make movement choice random
+
     let direction = directions[Math.floor(Math.random() * directions.length)];
     letMoveGhost++;
 
@@ -397,7 +402,14 @@ document.addEventListener("DOMContentLoaded", () => {
       //send ghost back to start index
       ghost.currentIndex = ghost.startIndex;
       // add to score
-      score += 100;
+      ghostEaten = 1;
+      console.log(ghostEaten)
+      if (ghostEaten === 1) {
+        score += ghostEaten * 100;
+      } else {
+        score += (ghostEaten * 100) * 2;
+      }
+
       // add ghost class to start square
       squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
     }
@@ -547,6 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     console.log("Orignal ghost info---", ghosts);
 
+    //messageDisplay.innerHTML = "UP Arrow - move up"
     messageDisplay.innerHTML = "PRESS SPACE TO START GAME";
   }
 

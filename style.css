@@ -9,6 +9,7 @@
   height: 560px;
   /*border: solid black;*/
   background: black;
+  margin: 40px 0px 0px 0px;
 }
 
 .grid div {
@@ -53,6 +54,11 @@
 #overlay.active {
   opacity: 1;
   pointer-events: all;
+}
+
+.modal-directions {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  padding: 15px;
 }
 
 .pac-dot {
